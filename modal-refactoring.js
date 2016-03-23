@@ -68,7 +68,7 @@
                     }
                 }
                 if (e.which == 27) {//esc key
-                    obj.filter(op.focusAbleElements).filter(':visible').first().click();
+                    obj.find(op.focusAbleElements).find(':visible').first().click();
                     e.preventDefault();
                 }
                 if (e.which == 9) {//tab key
@@ -76,7 +76,7 @@
                         obj.focus();
                     }
                     var focusableItems;
-                    focusableItems = obj.filter(op.focusAbleElements).filter(':visible');
+                    focusableItems = obj.find(op.focusAbleElements).find(':visible');
                     var focusedItem;
                     focusedItem = $(':focus');
                     var numberOfFocusableItems;
@@ -113,13 +113,13 @@
                 });
                 if(op.extClick) {
                     $(window).on('click.extClick', function(e){
-                        console.log(This==$(e.target))
-                        if(This.find(e.target).size()>0||This==$(e.target)) return false
+                        console.log(This==$(e.target));
+                        if(This.find(e.target).size()>0||This==$(e.target)) return false;
                         else $(op.extClick)
                     })
                 }
 
-                obj.filter(op.focusAbleElements).filter(':visible').first().focus();
+                obj.filter(op.focusAbleElements).find(':visible').first().focus();
             }
             function hideModal() {
                 if(op.blur) $('body>*').not(This).css(emptyCss);
@@ -194,7 +194,7 @@ String.prototype.toCamelCase = function(){
     if (self.indexOf('-') > 0) {
         var parts = self.split('-');
         self = parts[0];
-        for (i = 1; i < parts.length; i++) {
+        for (var i = 1; i < parts.length; i++) {
             self += parts[i].substr(0, 1).toUpperCase() + parts[i].substr(1).toLowerCase();
         }
     }
