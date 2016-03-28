@@ -18,7 +18,7 @@
         useJsonExpression:false,  //boolean json 데이터 출력여부
         tmpl:null,   //object template useJsonExpression 가 true 일 경우만
         a11y: true //boolean 접근성
-   }),utilFn() // Closer
+   })&&utilFn() // Closer
  *
  *  Method :>
  *      destroy() //obj 제거
@@ -28,7 +28,7 @@
 $(function () {
     'use strict';
     $.fn.layer = function (param, complete) {
-        var This = this, util, focusedElementBeforeLayer;
+        var This = this, utilFn, focusedElementBeforeLayer;
         var Type = typeof (param);
         var Action = param;
         param = $.extend({
@@ -44,7 +44,7 @@ $(function () {
             a11y: true //boolean 접근성
         }, param || {});
 
-        util = {
+        utilFn = {
             con: function(st){
                 console.log(st);
                 return this;
@@ -116,140 +116,134 @@ $(function () {
         };
 
         return this.each(function(i, obj){
-            console.log(Type, param);
+                console.log(Type, param);
 
-            focusedElementBeforeLayer = $(':focus');
+                focusedElementBeforeLayer = $(':focus');
 
-            /**
-             * Default Fn
-             */
-            var Show = function(){
-                $(obj).show(param.effect,complete).focus();
-            };
+                /**
+                 * Default Fn
+                 */
+                var Show = function(){
+                    $(obj).show(param.effect,complete).focus();
+                };
 
-            var Hide = function(){
-                $(obj).hide(param.effect,complete);
-                if(focusedElementBeforeLayer) focusedElementBeforeLayer.focus();
-                $(obj).off('.stealKey');
-                $(window).off('.stealKey');
-            };
+                var Hide = function(){
+                    $(obj).hide(param.effect,complete);
+                    if(focusedElementBeforeLayer) focusedElementBeforeLayer.focus();
+                    $(obj).off('.stealKey');
+                    $(window).off('.stealKey');
+                };
 
-            var CustomDisplay = function(Action){
-                if(!param.effect) $(obj).css('display', Action);
-                else {
-                    $(obj).animate({'display':Action }, param.effect, complete);
-                }
-            };
-
-
-            /**
-             * Minor Fn
-             */
-            var A11y = function(){
-                $(obj).attr('aria-hidden') ? $(obj).removeAttr('aria-hidden') : $(obj).attr('aria-hidden',true);
-                $('body>*').attr('aria-hidden') ? $('body>*').removeAttr('aria-hidden') : $('body>*').attr('aria-hidden', true);
-            };
-            var Blur = function(){
-                $('body>*').toggleClass(param.blur);
-            };
-            var Modal = function(){
-
-            };
-
-            var Align = function(){
-                var align = $(param.align.split(' '));
-                var pos = {};
-                align.each(function(i, v){
-                    if(v=='top') pos.top = 0;
-                    if(v=='middle') {
-                        pos.top = '50%';
-                        pos.marginTop = -(util.getPosition().oSize.height/2);
+                var CustomDisplay = function(Action){
+                    if(!param.effect) $(obj).css('display', Action);
+                    else {
+                        $(obj).animate({'display':Action }, param.effect, complete);
                     }
-                    if(v=='bottom') pos.bottom = 0;
-                    if(v=='left') pos.left = 0;
-                    if(v=='center') {
-                        pos.left = '50%';
-                        pos.marginLeft = -(util.getPosition().oSize.width/2);
-                    }
-                    if(v=='right') pos.right = 0;
-                });
-                $(obj).css(pos);
-                $(window).on('resize', function(){
-                    pos.marginTop = -(util.getPosition().oSize.height/2);
-                    pos.marginLeft = -(util.getPosition().oSize.width/2);
+                };
+
+
+                /**
+                 * Minor Fn
+                 */
+                var A11y = function(){
+                    $(obj).attr('aria-hidden') ? $(obj).removeAttr('aria-hidden') : $(obj).attr('aria-hidden',true);
+                    $('body>*').attr('aria-hidden') ? $('body>*').removeAttr('aria-hidden') : $('body>*').attr('aria-hidden', true);
+                };
+                var Blur = function(){
+                    $('body>*').toggleClass(param.blur);
+                };
+                var Modal = function(){
+
+                };
+
+                var Align = function(){
+                    var align = $(param.align.split(' '));
+                    var pos = {};
+                    align.each(function(i, v){
+                        if(v=='top') pos.top = 0;
+                        if(v=='middle') {
+                            pos.top = '50%';
+                            pos.marginTop = -(utilFn.getPosition().oSize.height/2);
+                        }
+                        if(v=='bottom') pos.bottom = 0;
+                        if(v=='left') pos.left = 0;
+                        if(v=='center') {
+                            pos.left = '50%';
+                            pos.marginLeft = -(utilFn.getPosition().oSize.width/2);
+                        }
+                        if(v=='right') pos.right = 0;
+                    });
                     $(obj).css(pos);
-                });
-            };
-
-            var Active = function(){
-                $(obj).toggleClass(param.activeClassName);
-            };
-
-            var Effect = function(){
-                //if(param.effect) {
-                   // return param.effect;
-               // }
-            };
-
-            /**
-             * Plugin
-             */
-            var JsonExpress = function(){
-
-            };
-
-            var EventBind = function(){
-                if(param.modal) {
-                    $(window).on('mousewheel.stealKey DOMMouseScroll.stealKey touchmove.stealKey' ,function(e){
-                        e.preventDefault();
-                        return false;
+                    $(window).on('resize', function(){
+                        pos.marginTop = -(utilFn.getPosition().oSize.height/2);
+                        pos.marginLeft = -(utilFn.getPosition().oSize.width/2);
+                        $(obj).css(pos);
                     });
-                    if($(obj).find('[data-trigger='+ param.closeTrigger +']').length<1) {
-                        $(obj).find('.'+param.closeTrigger).attr('data-trigger',param.closeTrigger);
+                };
+
+                var Active = function(){
+                    $(obj).toggleClass(param.activeClassName);
+                };
+
+                /**
+                 * Plugin
+                 */
+                var JsonExpress = function(){
+
+                };
+
+                var EventBind = function(){
+                    if(param.modal) {
+                        $(window).on('mousewheel.stealKey DOMMouseScroll.stealKey touchmove.stealKey' ,function(e){
+                            e.preventDefault();
+                            return false;
+                        });
+                        if($(obj).find('[data-trigger='+ param.closeTrigger +']').length<1) {
+                            $(obj).find('.'+param.closeTrigger).attr('data-trigger',param.closeTrigger);
+                        }
+                        $(obj).on('click.stealKey','[data-trigger='+ param.closeTrigger +']', function(){
+                            Hide();
+                            return false;
+                        });
+                        $(obj).on('keydown.stealKey', utilFn.stealKey);
                     }
-                    $(obj).on('click.stealKey','[data-trigger='+ param.closeTrigger +']', function(){
-                        Hide();
-                        return false;
-                    });
-                    $(obj).on('keydown.stealKey', util.stealKey);
-                }
-            };
-            var BaseFn = function(){
-                if (param.a11y) A11y();
-                if (param.activeClassName) Active();
+                };
+                var BaseFn = function(){
+                    if (param.a11y) A11y();
+                    if (param.activeClassName) Active();
 
-            };
-            var optionalFn = function(){
-                if (param.align) Align();
-                if (param.blur) Blur();
-                if (param.effect) Effect();
-                if (param.modal) Modal();
-                if (param.useJsonExpression) JsonExpress();
-            };
-            if(Type=='undefined') {
-                if($(obj).is(':visible')) Hide();
-                else Show();
-            }
-            if(Type=='string') {
-                if(Action=='show') Show();
-                else if(Action=='hide') Hide();
-                else CustomDisplay(Action);
-            }
-            if(Type=='object') {
-                if(param.display)  {
-                    if(param.display=='show') Show();
-                    else if(param.display=='hide') Hide();
-                    else CustomDisplay(param.display);
-                }
-                else {
+                };
+                var optionalFn = function(){
+                    if (param.align) Align();
+                    if (param.blur) Blur();
+                    if (param.effect) Effect();
+                    if (param.modal) Modal();
+                    if (param.useJsonExpression) JsonExpress();
+                };
+                if(Type=='undefined') {
                     if($(obj).is(':visible')) Hide();
                     else Show();
                 }
-                optionalFn();
-            }
-            BaseFn();
-            EventBind();
-            if(!param.effect) complete;
-        })&&util;
+                if(Type=='string') {
+                    if(Action=='show') Show();
+                    else if(Action=='hide') Hide();
+                    else CustomDisplay(Action);
+                }
+                if(Type=='object') {
+                    if(param.display)  {
+                        if(param.display=='show') Show();
+                        else if(param.display=='hide') Hide();
+                        else CustomDisplay(param.display);
+                    }
+                    else {
+                        if($(obj).is(':visible')) Hide();
+                        else Show();
+                    }
+                    optionalFn();
+                }
+                BaseFn();
+                EventBind();
+                if(!param.effect) complete;
+            })&&utilFn;
     };
 });
