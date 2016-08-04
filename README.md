@@ -4,6 +4,6 @@ scroll event of the viewport.
 # Modal
 modal
 
-# Layer
-a11y Layer
+# $.layer.js
+a11y Layer handler
 
