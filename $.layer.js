@@ -1,5 +1,6 @@
 /**
- * Created by w-marc(shlee) on 2015-12-08.
+ * jQuery plugin : $.layer
+ * Created by bom-studio(shlee) on 2016-03
  *
  * ===================================================================
  *  $(obj).layer(param, complete).fn() //param = obj, complete = Fn
@@ -16,14 +17,11 @@
         closeTrigger : 'layer-close',  //string :: 닫기버튼 data-trigger="layer-close" or 셀랙터
         effect: false, //string or object ::  효과 duration, easing
         a11y: false, //boolean :: 접근성 aria 관련
-        useJsonExpression:false,  //boolean ::  json 데이터 출력여부
-        jsonData:false,  //obj||String ::  jsonExpress data
-        jsonTmpl:false  //obj ::  jsonExpress template
    }),utilFn() // Closer
  *
  *  Method :>
  *      destroy() //obj 제거
- *      getSize() //obj 위치값 리턴
+ *      getSize() //obj 크기 값 리턴
  *
  * ===================================================================
  */
@@ -38,13 +36,11 @@ $(function () {
             blur: false,
             modal:true,
             align: false,
+            gallery:false,
             activeClassName : 'layer-active',
             closeTrigger : 'layer-close',
             effect: false,
-            a11y: false,
-            useJsonExpression:false,
-            jsonData:false,
-            jsonTmpl:false
+            a11y: false
         }, param || {});
 
         utilFn = $.fn.extend({
@@ -122,20 +118,28 @@ $(function () {
 
         return this.each(function(i, obj){
             focusedElementBeforeLayer = $(':focus');
+            $(obj).attr('tabindex',1);
             if(!$.isFunction(complete)) complete = function(){};
             /**
              * Default Fn
              */
             var Show = function(){
+                if(param.align) {
+                    $(obj).css('opacity', '0');
+                }
                 $(obj).show(param.effect, complete()).focus();
                 EventBind();
+                $(obj).trigger('show');
             };
 
             var Hide = function(){
                 $(obj).hide(param.effect, complete());
                 if(focusedElementBeforeLayer) focusedElementBeforeLayer.focus();
+                $(obj).removeClass(param.activeClassName);
+                $(obj).removeAttr('tabindex');
                 $(window).off('.stealKey');
                 $(obj).off('.stealKey');
+                $(obj).trigger('hide');
             };
 
             var CustomDisplay = function(Action){
@@ -146,6 +150,7 @@ $(function () {
                     $(obj).animate({'display':Action }, param.effect,  complete());
                 }
                 if(Action!='none') EventBind();
+                $(obj).trigger(Action);
             };
 
             /**
@@ -177,6 +182,7 @@ $(function () {
                     if(v=='right') pos.right = 0;
                 });
                 $(obj).css(pos);
+                $(obj).animate({'opacity':1},100);
                 $(window).on('resize', function(){
                     pos.marginTop = -(utilFn.getSize().oSize.height/2);
                     pos.marginLeft = -(utilFn.getSize().oSize.width/2);
@@ -191,9 +197,6 @@ $(function () {
             /**
              * Plugin
              */
-            var JsonExpress = function(){
-                $(obj).jsonExpression(param.jsonTmpl, param.jsonData, "rows");
-            };
 
             var EventBind = function(){
                 if(param.modal && $(obj).is(':visible')) {
@@ -216,9 +219,12 @@ $(function () {
                 if (param.activeClassName) Active();
             };
             var optionalFn = function(){
-                if (param.align) Align();
+                if(param.align) {
+                    setTimeout(function(){
+                        Align(param.align);
+                    },100);
+                }
                 if (param.blur) Blur();
-                if (param.useJsonExpression) JsonExpress();
             };
 
             /**
@@ -251,4 +257,12 @@ $(function () {
             return this;
         });
     };
+    if(navigator.userAgent.toLowerCase().indexOf("chrome")>-1){
+        var e=["\n %c Made with by Bom-studio($.layer) %c %c %c http://www.bom-studio.net %c %c\n\n",
+            "color: #fff; background: #b0976d; padding:5px 0;","background: #494949; padding:5px 0;",
+            "background: #494949; padding:5px 0;","color: #fff; background: #1c1c1c; padding:5px 0;",
+            "background: #fff; padding:5px 0;","color: #b0976d; background: #fff; padding:5px 0;"];
+        window.console.log.apply(console,e)
+    }
+    else window.console&&window.console.log("Made with by Bom-studio - http://www.bom-studio.net");
 });
