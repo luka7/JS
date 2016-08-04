@@ -1,5 +1,5 @@
-# JS
-JS Util
+# $.addViewportEvent.js
+scroll event of the viewport.
 
 # Modal
 modal
